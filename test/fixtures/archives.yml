@@ -10,12 +10,12 @@
 #  updated_at   :datetime         not null
 #
 
-one:
-  title: MyString
-  original_url: MyString
-  status: MyString
-
-two:
-  title: MyString
-  original_url: MyString
-  status: MyString
+#one:
+#  title: 1084537
+#  original_url: https://vimeo.com/1084537
+#  status: Archive::Status::WAITING
+#
+#two:
+#  title: 1132937
+#  original_url: https://vimeo.com/1132937
+#  status: Archive::Status::WAITING

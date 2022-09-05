@@ -1,45 +1,39 @@
 require "application_system_test_case"
 
 class ArchivesTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
+  BIG_BUCK_BUNNY_URL = "https://vimeo.com/1084537"
+  ELEPHANTS_DREAM_URL = "https://vimeo.com/1132937"
+
   setup do
-    @archive = archives(:one)
+    perform_enqueued_jobs do
+      Archive.create(:original_url => BIG_BUCK_BUNNY_URL)
+    end
+
+    @archive = Archive.ordered.first
   end
 
-  test "visiting the index" do
-    visit archives_url
-    assert_selector "h1", text: "Archives"
+  test "ビデオアーカイブの表示" do
+    visit archives_path
+    click_link "Big Buck Bunny"
+
+    assert_selector "h2", text: "Big Buck Bunny"
   end
 
-  test "should create archive" do
-    visit archives_url
-    click_on "New archive"
+  test "ビデオアーカイブの追加" do
+    visit archives_path
+    assert_selector "h1", text: "保存したビデオ"
 
-    fill_in "Original url", with: @archive.original_url
-    fill_in "Status", with: @archive.status
-    fill_in "Title", with: @archive.title
-    click_on "Create Archive"
+    click_on "動画を追加する"
+    fill_in "動画のURL", with: ELEPHANTS_DREAM_URL
 
-    assert_text "Archive was successfully created"
-    click_on "Back"
-  end
+    assert_selector "h1", text: "保存したビデオ"
+    click_on "動画を追加"
 
-  test "should update Archive" do
-    visit archive_url(@archive)
-    click_on "Edit this archive", match: :first
+    perform_enqueued_jobs
 
-    fill_in "Original url", with: @archive.original_url
-    fill_in "Status", with: @archive.status
-    fill_in "Title", with: @archive.title
-    click_on "Update Archive"
-
-    assert_text "Archive was successfully updated"
-    click_on "Back"
-  end
-
-  test "should destroy Archive" do
-    visit archive_url(@archive)
-    click_on "Destroy this archive", match: :first
-
-    assert_text "Archive was successfully destroyed"
+    assert_selector "h1", text: "保存したビデオ"
+    assert_text "Elephants Dream"
   end
 end
