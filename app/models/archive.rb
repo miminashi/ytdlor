@@ -25,30 +25,45 @@ class Archive < ApplicationRecord
   has_one_attached :thumbnail
   has_one_attached :video
 
-  attribute(:title, default: "新しい動画")
-  attribute(:status, default: Status::WAITING)  # status = {waiting, done}
+  attribute(:status, default: Status::WAITING)
 
   # バリデーション
   validates(:original_url, presence: true)
+  validates(:status, presence: true, inclusion: {
+    :in => [
+      Status::WAITING,
+      Status::DONE,
+      Status::PROCESSING,
+      Status::FAILED
+    ]
+  })
 
   # scope
   scope :ordered, -> { order({:id => :desc}) }
   scope :failed, -> { where({:status => Status::FAILED}) }
 
   # コールバック
-  after_create do
-    ThumbnailDownloadJob.perform_later(self)
-    VideosDownloadJob.perform_later(self)
-  end
-
   before_save do
+    # 仮のタイトルを設定する
+    unless self.title
+      self.title = self.default_title
+    end
+
+    # サムネイルとビデオが存在するならステータスを完了にする
     if self.thumbnail.attached? and self.video.attached?
       self.status = Status::DONE
     end
   end
 
-  broadcasts_to ->(archive) { TURBO_CHANNEL }, inserts_by: :prepend
+  after_commit do
+    if self.waiting?
+      self.update({:status => Status::PROCESSING})
+      ThumbnailDownloadJob.perform_later(self)
+      VideosDownloadJob.perform_later(self)
+    end
+  end
 
+  broadcasts_to ->(archive) { TURBO_CHANNEL }, inserts_by: :prepend
 
   def update_thumbnail_later
     ThumbnailDownloadJob.perform_later(self)
@@ -58,8 +73,12 @@ class Archive < ApplicationRecord
     VideosDownloadJob.perform_later(self)
   end
 
+  def waiting?
+    status == Status::WAITING
+  end
+
   def done?
-    status == "done"
+    status == Status::DONE
   end
 
   #
@@ -105,7 +124,6 @@ class Archive < ApplicationRecord
       # -f bestvideo+bestaudio がpornhubだとうごかない？
       #command = 'youtube-dl --newline -f bestvideo+bestaudio --merge-output-format mp4 -o "%s" "%s"' % [filename, self.original_url]
       command = 'youtube-dl --newline --merge-output-format mp4 -o "%s" "%s"' % [filename, self.original_url]
-      #stdout, stderr, status = Open3.capture3(command)
       success = nil
       Open3.popen2e(command) do |stdin, stdoe, wait_thr|
         while (line = stdoe.gets) do
@@ -114,6 +132,7 @@ class Archive < ApplicationRecord
         success = wait_thr.value.success?
       end
       if success
+        self.reload
         self.video.attach(io: File.open(filename), filename: filename, content_type: 'video/mp4')
         puts("ビデオのダウンロードに成功しました")
         logger.info("ビデオのダウンロードに成功しました")
@@ -150,6 +169,17 @@ class Archive < ApplicationRecord
     else
       logger.debug stderr
       return nil
+    end
+  end
+
+  private
+
+  def default_title
+    m_count = Archive.where('title like ?', '新しい動画%').count
+    if m_count > 0
+      return '新しい動画(%s)' % m_count
+    else
+      return '新しい動画'
     end
   end
 end
