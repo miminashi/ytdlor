@@ -1,9 +1,14 @@
 # YTDLOR
 
+![YTDLOR screenshot](ytdlor.png)
+
 **YouTube-DL On Rail**
 
 [youtube-dl](https://github.com/ytdl-org/youtube-dl)のフロントエンド
 
+## デモサイト
+
+準備中
 
 ## システム要件
 
