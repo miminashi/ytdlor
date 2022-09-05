@@ -54,6 +54,18 @@ rails s
 
 起動したら http://localhost:3000/ でアクセスできる
 
+**テストの実行**
+
+```sh
+rails test:system
+```
+
+テストのログを見るには、
+
+```sh
+tail -f log/test.log
+```
+
 **solargraphのセットアップ**
 
 ```sh
