@@ -84,6 +84,9 @@ class Archive < ApplicationRecord
   #
   # 動画のタイトルを取得してtitleに設定する
   #
+  #   note:
+  #     - 異常系が全然考慮されてないのでなんとかする
+  #
   def update_title
     self.title = fetch_title(self.original_url)
     self.save
@@ -98,7 +101,6 @@ class Archive < ApplicationRecord
   #
   def update_thumbnail
     thumbnail_url = fetch_thumbnail_url(self.original_url)
-
     unless thumbnail_url
       return false
     end
@@ -114,32 +116,35 @@ class Archive < ApplicationRecord
       broadcast_replace_to(TURBO_CHANNEL)
     end
 
-    puts "サムネイルの更新が完了しました"
+    logger.info("サムネイルの更新が完了しました")
+
+    return true
   end
 
   # ビデオを取得する
   def update_video
     Dir.mktmpdir do |dir|
       filename = File.join(dir, 'download.mp4')
-      # -f bestvideo+bestaudio がpornhubだとうごかない？
-      #command = 'youtube-dl --newline -f bestvideo+bestaudio --merge-output-format mp4 -o "%s" "%s"' % [filename, self.original_url]
       command = 'youtube-dl --newline --merge-output-format mp4 -o "%s" "%s"' % [filename, self.original_url]
       success = nil
       Open3.popen2e(command) do |stdin, stdoe, wait_thr|
         while (line = stdoe.gets) do
-          puts(line.chomp)
+          # youtube-dl の [download] ではじまる行は間引きする
+          if line =~ /[download]/
+            logger.info(line.chomp) if line =~ /\d{1,3}.0%/
+          else
+            logger.info(line.chomp)
+          end
         end
         success = wait_thr.value.success?
       end
       if success
         self.reload
         self.video.attach(io: File.open(filename), filename: filename, content_type: 'video/mp4')
-        puts("ビデオのダウンロードに成功しました")
         logger.info("ビデオのダウンロードに成功しました")
         broadcast_replace_to(TURBO_CHANNEL)
       else
-        #logger.debug stderr
-        puts("ビデオのダウンロードに失敗しました")
+        logger.info("ビデオのダウンロードに失敗しました")
         return false
       end
     end
@@ -153,9 +158,11 @@ class Archive < ApplicationRecord
     command = 'youtube-dl -e "%s"' % video_url
     stdout, stderr, status = Open3.capture3(command)
     if status.success?
+      logger.info("タイトルの取得に成功しました")
       return stdout
     else
       logger.debug stderr
+      logger.debug("タイトルの取得に失敗しました")
       return nil
     end
   end
@@ -165,9 +172,11 @@ class Archive < ApplicationRecord
     command = 'youtube-dl --get-thumbnail "%s"' % original_url
     stdout, stderr, status = Open3.capture3(command)
     if status.success?
+      logger.info("サムネイルURLの取得に成功しました")
       return stdout.chomp
     else
       logger.debug stderr
+      logger.info("サムネイルURLの取得に失敗しました")
       return nil
     end
   end
