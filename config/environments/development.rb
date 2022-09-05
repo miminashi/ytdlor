@@ -67,4 +67,7 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # Resqueで動作確認したいときはコメントをはずす
+  #config.active_job.queue_adapter = :resque
 end

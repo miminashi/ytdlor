@@ -1,6 +1,4 @@
 class ThumbnailDownloadJob < ApplicationJob
-  self.queue_adapter = :resque
-
   queue_as :thumbnail
 
   #

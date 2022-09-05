@@ -1,6 +1,4 @@
 class VideosDownloadJob < ApplicationJob
-  self.queue_adapter = :resque
-  
   queue_as :video
 
   #
