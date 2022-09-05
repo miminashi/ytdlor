@@ -1,0 +1,14 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  justify-content: space-between;
+  margin-top: var(--space-l);
+  margin-bottom: var(--space-l);
+}
+
+@media (min-width: 40rem) {
+  .header {
+    margin-bottom: var(--space-xl);
+  }
+}

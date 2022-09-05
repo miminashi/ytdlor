@@ -1,0 +1,19 @@
+<%= turbo_frame_tag(archive) do %>
+  <article class="article">
+    <%= link_to(archive_path(archive), data: {turbo_frame: "_top"}, class: "article__anchor") do %>
+      <% if archive.thumbnail.attached? %>
+        <%= image_tag(rails_representation_path(archive.thumbnail.representation(resize_to_limit: [640, 360])), class: "article__thumbnail") %>
+      <% else %>
+        <%= image_tag("no_image.png", :class => "article__thumbnail") %>
+      <% end %>
+      <div class="article__header">
+        <h2 class="article__title"><%= archive.title %></h2>
+        <div class="article__metadata">
+          <div>追加日: <%= archive.created_at.in_time_zone('Tokyo').strftime('%Y-%m-%d %H:%M') %></div>
+          <div>状態: <%= archive.status %></div>
+        </div>
+      </div>
+    <% end %>
+  </article>
+<% end %>
+

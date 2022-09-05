@@ -1,0 +1,22 @@
+<main class="container">
+  <div class="header">
+    <%= link_to("← 動画の一覧に戻る", archives_path) %>
+  </div>
+  
+  <article class="archive">
+    <% if @archive.video.attached? %>
+      <%= video_tag(url_for(@archive.video), controls: true) %>
+    <% else %>
+      <p>no video</p>
+    <% end %>
+    <div class="archive__header">
+      <h2 class="archive__title"><%= @archive.title %></h2>
+      <p>取得元URL: <%= link_to(nil, @archive.original_url, target: "_blank") %></p>
+      <div class="archive__metadata">
+        <div>追加日: <%= @archive.created_at.in_time_zone('Tokyo').strftime('%Y-%m-%d %H:%M') %></div>
+        <div>状態: <%= @archive.status %></div>
+      </div>
+    </div>
+  </article>
+</main>
+

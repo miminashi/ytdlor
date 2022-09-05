@@ -1,0 +1,17 @@
+<%= turbo_stream_from "archives" %>
+
+<main class="container">
+  <div class="header">
+    <h1>&#x1f39e;&nbsp;保存したビデオ</h1>
+    <%= link_to("動画を追加する",
+                new_archive_path,
+                data: {:turbo_frame => dom_id(Archive.new)},
+                class: "btn btn--primary") %>
+  </div>
+
+  <%= turbo_frame_tag(Archive.new) %>
+
+  <%= turbo_frame_tag("archives") do %>
+    <%= render @archives %>
+  <% end %>
+</main>

@@ -1,0 +1,28 @@
+.article {
+  /* display: flex; */
+  background-color: #FFFFFF;
+  margin-bottom: var(--space-m);
+  /* padding-left: 10px; */
+}
+
+.article__thumbnail {
+  width: 100%;
+  background-color: #F0F0F0;
+  min-height: 360px;
+}
+
+.article__header {
+  padding-top: var(--space-s);
+  padding-left: var(--space-s);
+  padding-right: var(--space-s);
+  padding-bottom: var(--space-m);
+}
+
+.article__title {
+  margin-bottom: var(--space-xs);
+}
+
+.article__metadata {
+  display: flex;
+  gap: var(--space-s);
+}

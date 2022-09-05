@@ -1,0 +1,21 @@
+# == Schema Information
+#
+# Table name: archives
+#
+#  id           :integer          not null, primary key
+#  title        :string
+#  original_url :string
+#  status       :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
+one:
+  title: MyString
+  original_url: MyString
+  status: MyString
+
+two:
+  title: MyString
+  original_url: MyString
+  status: MyString

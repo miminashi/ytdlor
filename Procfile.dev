@@ -1,0 +1,3 @@
+thumbnail_worker: QUEUE="thumbnail" rake resque:work
+video_worker_1: VERBOSE=1 QUEUE="video" rake resque:work
+video_worker_2: VERBOSE=1 QUEUE="video" rake resque:work

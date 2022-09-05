@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  padding: var(--space-m) var(--space-m);
+}
+
+.form__group {
+  display: flex;
+  flex: 1;
+}
+
+.form__label {
+  padding: var(--space-xs);
+  font-weight: bold;
+}
+
+.form__input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  padding: var(--space-xxs) var(--space-xs);
+  flex: 1;
+}

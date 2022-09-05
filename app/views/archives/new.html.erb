@@ -1,0 +1,12 @@
+<main class="container">
+  <%= link_to(sanitize("&#x1f519; 動画の一覧に戻る"), archives_path) %>
+
+  <div class="header">
+    <h1>動画を追加する</h1>
+  </div>
+
+  <%= turbo_frame_tag(@archive) do %>
+    <%#= render("form", @archive) %>
+    <%= render(partial: "form", locals: {:archive => @archive}) %>
+  <% end %>
+</main>

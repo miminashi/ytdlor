@@ -1,0 +1,17 @@
+<%= form_with(model: archive, html: {:class => "article form"}) do |f| %>
+  <% if archive.errors.any? %>
+    <div class="error-message">
+      <%= archive.errors.full_messages.to_sentence.capitalize %>
+    </div>
+  <% end %>
+
+  <div class="form__group">
+    <%= f.label(:original_url, "動画のURL", class: "form__label") %>
+    <%= f.text_field(:original_url, autofocus: true, class: "form__input") %>
+  </div>
+  <div class="form_actions">
+    <%= link_to("キャンセル", archives_path, class: "btn btn--light") %>
+    <%= f.submit("動画を追加", {class: "btn btn--secondary"}) %>
+  </div>
+<% end %>
+

@@ -1,0 +1,2 @@
+<%= turbo_stream.prepend "archives", partial: "archives/archive", locals: {archive: @archive} %>
+<%= turbo_stream.update Archive.new, "" %>
