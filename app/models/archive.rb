@@ -55,15 +55,10 @@ class Archive < ApplicationRecord
     end
   end
 
-  after_commit do
-    if self.waiting?
-      self.update({:status => Status::PROCESSING})
-      ThumbnailDownloadJob.perform_later(self)
-      VideosDownloadJob.perform_later(self)
-    end
-  end
-
   broadcasts_to ->(archive) { TURBO_CHANNEL }, inserts_by: :prepend
+
+  after_commit :after_create_commit, on: :create
+
 
   def update_thumbnail_later
     ThumbnailDownloadJob.perform_later(self)
@@ -123,6 +118,8 @@ class Archive < ApplicationRecord
 
   # ビデオを取得する
   def update_video
+    self.reload
+    self.update({:status => Status::PROCESSING})
     Dir.mktmpdir do |dir|
       filename = File.join(dir, 'download.mp4')
       command = 'youtube-dl --newline --merge-output-format mp4 -o "%s" "%s"' % [filename, self.original_url]
@@ -190,5 +187,10 @@ class Archive < ApplicationRecord
     else
       return '新しい動画'
     end
+  end
+
+  def after_create_commit
+    self.update_thumbnail_later
+    self.update_video_later
   end
 end
