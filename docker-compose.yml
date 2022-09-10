@@ -25,6 +25,7 @@ services:
       RAILS_SERVE_STATIC_FILES: 1
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      MALLOC_ARENA_MAX: 2
     command: rails server
   default_worker:
     build: .
@@ -43,6 +44,7 @@ services:
       QUEUE: default
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      MALLOC_ARENA_MAX: 2
     command: rake resque:work
   thumbnail_worker:
     build: .
@@ -61,6 +63,7 @@ services:
       QUEUE: thumbnail
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      MALLOC_ARENA_MAX: 2
     command: rake resque:work
   video_worker:
     build: .
@@ -79,6 +82,7 @@ services:
       QUEUE: video
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      MALLOC_ARENA_MAX: 2
     command: rake resque:work
   redis:
     image: redis
