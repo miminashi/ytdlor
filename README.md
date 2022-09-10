@@ -66,6 +66,12 @@ rails test:system
 tail -f log/test.log
 ```
 
+**docker composeの動作確認**
+
+```sh
+RAILS_MASTER_KEY="$(cat config/credentials/production.key)" docker compose up
+```
+
 **solargraphのセットアップ**
 
 ```sh

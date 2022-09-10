@@ -1,0 +1,72 @@
+services:
+  web:
+    build: .
+    ports: 
+      - "3000:3000"
+      - "5678:5678"
+    volumes:
+      - type: volume
+        source: db
+        target: /var/opt/ytdlor/db
+      - type: volume
+        source: storage
+        target: /var/opt/ytdlor/storage
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      REDIS_URL: "redis://redis:6379/1"
+      RAILS_SERVE_STATIC_FILES: 1
+    command: rails server
+  default_worker:
+    build: .
+    volumes:
+      - type: volume
+        source: db
+        target: /var/opt/ytdlor/db
+      - type: volume
+        source: storage
+        target: /var/opt/ytdlor/storage
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      REDIS_URL: "redis://redis:6379/1"
+      VERBOSE: 1
+      QUEUE: default
+    command: rake resque:work
+  thumbnail_worker:
+    build: .
+    volumes:
+      - type: volume
+        source: db
+        target: /var/opt/ytdlor/db
+      - type: volume
+        source: storage
+        target: /var/opt/ytdlor/storage
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      REDIS_URL: "redis://redis:6379/1"
+      VERBOSE: 1
+      QUEUE: thumbnail
+    command: rake resque:work
+  video_worker:
+    build: .
+    volumes:
+      - type: volume
+        source: db
+        target: /var/opt/ytdlor/db
+      - type: volume
+        source: storage
+        target: /var/opt/ytdlor/storage
+    environment:
+      RAILS_ENV: production
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      REDIS_URL: "redis://redis:6379/1"
+      VERBOSE: 1
+      QUEUE: video
+    command: rake resque:work
+  redis:
+    image: redis
+volumes:
+  db:
+  storage:

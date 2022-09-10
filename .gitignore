@@ -37,3 +37,6 @@
 # yard関連
 /.yardoc
 /doc
+
+# production環境のmaster key
+/config/credentials/production.key

@@ -1,37 +1,44 @@
-##
-## ビルド用ステージ
-##
-## See: https://hub.docker.com/_/rust
-##
-#FROM ruby:3.1.2-buster as build_env
 #
-#ENV DEBIAN_FRONTEND noninteractive
+# ビルド用ステージ
 #
-#RUN apt-get update -y && apt-get upgrade -y
-#
-#WORKDIR /opt/ytdlor
+FROM ruby:3.1.2-slim-bullseye as builder
 
-
-#
-# 実行用ステージ
-#
-FROM ruby:3.1.2-slim-bullseye
-
-ENV APPROOT="/opt/ytdlor"
 ENV DEBIAN_FRONTEND noninteractive
+ENV APPROOT="/opt/ytdlor"
+ENV DUMMY_KEY="SECRET_KEY_BASE"
+ENV RAILS_ENV="production"
 
 RUN apt-get -y update && \
-    apt-get -y install systemd build-essential && \
+    apt-get -y upgrade && \
+    apt-get -y install build-essential libsqlite3-dev && \
     apt-get clean
-
-#COPY --from=build_env /usr/local/cargo/bin/sakura /usr/local/sbin/sakura
 
 WORKDIR ${APPROOT}
 
 COPY . ${APPROOT}
 
 RUN gem install bundler && bundle install
-RUN rails assets:precompile RAILS_ENV=production
+RUN RAILS_ENV=${RAILS_ENV} SECRET_KEY_BASE=$(rails secret) rails assets:precompile
 
-STOPSIGNAL SIGRTMIN+3
-CMD [ "/sbin/init" ]
+#
+# 実行用ステージ
+#
+FROM ruby:3.1.2-slim-bullseye
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV APPROOT="/opt/ytdlor"
+ENV RAILS_LOG_TO_STDOUT="1"
+
+RUN apt-get -y update && \
+    apt-get -y upgrade && \
+    apt-get -y install sqlite3 libvips42 youtube-dl && \
+    apt-get clean
+
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /opt/ytdlor/public/assets /opt/ytdlor/public/assets
+
+WORKDIR ${APPROOT}
+
+COPY . ${APPROOT}
+
+CMD rails about
