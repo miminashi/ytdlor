@@ -70,4 +70,8 @@ Rails.application.configure do
 
   # Resqueで動作確認したいときはコメントをはずす
   #config.active_job.queue_adapter = :resque
+
+  # ActiveStorageのURLの期限切れを伸ばす
+  #   - 動画の再生が5分で途切れる問題のワークアラウンド
+  config.active_storage.service_urls_expire_in = 24.hour
 end

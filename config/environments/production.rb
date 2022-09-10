@@ -90,4 +90,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # ActiveStorageのURLの期限切れを伸ばす
+  #   - 動画の再生が5分で途切れる問題のワークアラウンド
+  config.active_storage.service_urls_expire_in = 24.hour
 end
