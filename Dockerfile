@@ -10,7 +10,7 @@ ENV RAILS_ENV="production"
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get -y install build-essential libsqlite3-dev && \
+    apt-get -y install build-essential libsqlite3-dev libpq-dev && \
     apt-get clean
 
 WORKDIR ${APPROOT}
@@ -31,7 +31,7 @@ ENV RAILS_LOG_TO_STDOUT="1"
 
 RUN apt-get -y update && \
     apt-get -y upgrade && \
-    apt-get -y install sqlite3 libvips42 youtube-dl && \
+    apt-get -y install libpq5 sqlite3 libvips42 youtube-dl && \
     apt-get clean
 
 COPY --from=builder /usr/local/bundle /usr/local/bundle

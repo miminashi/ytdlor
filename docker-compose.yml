@@ -1,13 +1,20 @@
 services:
+  db:
+    image: postgres
+    environment:
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
   web:
     build: .
     ports: 
       - "3000:3000"
       - "5678:5678"
     volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
+      #- type: volume
+      #  source: db
+      #  target: /var/opt/ytdlor/db
       - type: volume
         source: storage
         target: /var/opt/ytdlor/storage
@@ -16,13 +23,15 @@ services:
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       REDIS_URL: "redis://redis:6379/1"
       RAILS_SERVE_STATIC_FILES: 1
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     command: rails server
   default_worker:
     build: .
     volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
+      #- type: volume
+      #  source: db
+      #  target: /var/opt/ytdlor/db
       - type: volume
         source: storage
         target: /var/opt/ytdlor/storage
@@ -32,13 +41,15 @@ services:
       REDIS_URL: "redis://redis:6379/1"
       VERBOSE: 1
       QUEUE: default
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     command: rake resque:work
   thumbnail_worker:
     build: .
     volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
+      #- type: volume
+      #  source: db
+      #  target: /var/opt/ytdlor/db
       - type: volume
         source: storage
         target: /var/opt/ytdlor/storage
@@ -48,13 +59,15 @@ services:
       REDIS_URL: "redis://redis:6379/1"
       VERBOSE: 1
       QUEUE: thumbnail
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     command: rake resque:work
   video_worker:
     build: .
     volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
+      #- type: volume
+      #  source: db
+      #  target: /var/opt/ytdlor/db
       - type: volume
         source: storage
         target: /var/opt/ytdlor/storage
@@ -64,9 +77,12 @@ services:
       REDIS_URL: "redis://redis:6379/1"
       VERBOSE: 1
       QUEUE: video
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
     command: rake resque:work
   redis:
     image: redis
 volumes:
-  db:
+  #db:
   storage:
+  postgres_volume:

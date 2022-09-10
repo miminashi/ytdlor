@@ -21,5 +21,10 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: /var/opt/ytdlor/db/production.sqlite3
+  #<<: *default
+  #database: /var/opt/ytdlor/db/production.sqlite3
+  adapter: postgresql
+  endcoding: unicode
+  host: db
+  username: <%= ENV["POSTGRES_USER"] %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
