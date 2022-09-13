@@ -38,7 +38,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :production
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -59,8 +59,8 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "ytdlor_production"
+  config.active_job.queue_adapter     = :resque
+  #config.active_job.queue_name_prefix = "ytdlor_production"
 
   config.action_mailer.perform_caching = false
 
@@ -90,4 +90,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # ActiveStorageのURLの期限切れを伸ばす
+  #   - 動画の再生が5分で途切れる問題のワークアラウンド
+  config.active_storage.service_urls_expire_in = 24.hour
 end
