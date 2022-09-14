@@ -38,4 +38,4 @@ jobs:
         docker compose build
         docker compose stop
         docker compose run --rm web rails db:migrate
-        docker compose up -d --remove-orphans
+        docker compose up -d --remove-orphans --force-recreate
