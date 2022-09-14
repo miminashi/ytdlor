@@ -1,4 +1,4 @@
-name: deploy demo site
+name: Deploy demo site
 
 on:
   push:
@@ -32,6 +32,7 @@ jobs:
         docker context use production
     - name: Deploy to host
       env:
+        COMPOSE_PROJECT_NAME: ytdlor_demo_site
         RAILS_MASTER_KEY: ${{ secrets.DEMO_SITE_RAILS_MASTER_KEY }}
       run: |
         docker compose build
