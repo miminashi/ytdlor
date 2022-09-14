@@ -8,7 +8,20 @@
 
 ## デモサイト
 
-準備中
+https://demo.ytdlor.or6.jp/
+
+**デモサイト利用上の注意**
+
+- デモサイトを試す際は、ライセンス的に問題のない動画のURLを入力してください
+  - 動画のダウンロードを利用規約で禁止している動画サイトのURLを入力しないでください
+    - 利用規約でダウンロードを禁止している動画サイトの例としては、YouTubeが挙げられます
+    - 利用規約でダウンロードを禁止していない動画サイトの例としては、Vimeoが挙げられます
+  - オープンライセンスの動画の一覧がWikipediaにあります
+    - [List of major Creative Commons licensed works - Wikipedia](https://en.wikipedia.org/wiki/List_of_major_Creative_Commons_licensed_works#Video_and_film)
+  - まとめると、「利用規約でダウンロードが禁止されていない動画サイトにアップロードされているCC0（Public Domain）の動画」がデモを試すためのURLとして望ましいです
+    - [VimeoにアップロードされているCC0の動画](https://vimeo.com/creativecommons/cc0)
+- ダウンロードが完了してから15分が経過すると、動画は自動的に削除されます
+
 
 ## システム要件
 
