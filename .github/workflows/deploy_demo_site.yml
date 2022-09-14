@@ -1,0 +1,38 @@
+name: deploy demo site
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create ssh config
+      env:
+        SSH_USER: ${{ secrets.DEMO_SITE_SSH_USER }}
+        SSH_HOSTNAME: ${{ secrets.DEMO_SITE_SSH_HOSTNAME }}
+        SSH_PRIVATE_KEY: ${{ secrets.DEMO_SITE_SSH_PRIVATE_KEY }}
+        SSH_KNOWN_HOSTS: ${{ secrets.DEMO_SITE_SSH_KNOWN_HOSTS }}
+      run: |
+        mkdir ~/.ssh
+        echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+        echo "${SSH_KNOWN_HOSTS}" > ~/.ssh/known_hosts && chmod 600 ~/.ssh/known_hosts
+        cat > ~/.ssh/config <<EOF
+        Host production
+          HostName ${SSH_HOSTNAME}
+          User ${SSH_USER}
+        EOF
+    - name: Create docker context
+      run: docker context create --docker host=ssh://production production
+    - name: Deploy to host
+      env:
+        RAILS_MASTER_KEY: ${{ secrets.DEMO_SITE_RAILS_MASTER_KEY }}
+      run: |
+        docker compose build
+        docker compose stop
+        docker compose run --rm web rails db:migrate
+        docker compose up -d --remove-orphans
