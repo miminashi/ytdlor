@@ -27,7 +27,9 @@ jobs:
           User ${SSH_USER}
         EOF
     - name: Create docker context
-      run: docker context create --docker host=ssh://production production
+      run: |
+        docker context create --docker host=ssh://production production
+        docker context use production
     - name: Deploy to host
       env:
         RAILS_MASTER_KEY: ${{ secrets.DEMO_SITE_RAILS_MASTER_KEY }}
