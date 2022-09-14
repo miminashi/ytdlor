@@ -15,9 +15,11 @@ RUN apt-get -y update && \
 
 WORKDIR ${APPROOT}
 
-COPY . ${APPROOT}
-
+COPY Gemfile ${APPROOT}
+COPY Gemfile.lock ${APPROOT}
 RUN gem install bundler && bundle install
+
+COPY . ${APPROOT}
 RUN RAILS_ENV=${RAILS_ENV} SECRET_KEY_BASE=$(rails secret) rails assets:precompile
 
 #
