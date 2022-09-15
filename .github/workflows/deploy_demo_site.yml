@@ -33,7 +33,7 @@ jobs:
         COMPOSE_PROJECT_NAME: ytdlor_demo_site
         RAILS_MASTER_KEY: ${{ secrets.DEMO_SITE_RAILS_MASTER_KEY }}
       run: |
-        docker compose build
-        docker compose stop
-        docker compose run --rm web rails db:migrate
-        docker compose up -d --remove-orphans
+        docker compose -f docker-compose.yml -f docker-compose-demo-site.yml build
+        docker compose -f docker-compose.yml -f docker-compose-demo-site.yml stop
+        docker compose -f docker-compose.yml -f docker-compose-demo-site.yml run --rm web rails db:migrate
+        docker compose -f docker-compose.yml -f docker-compose-demo-site.yml up -d --remove-orphans --force-recreate
