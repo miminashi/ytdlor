@@ -2,7 +2,7 @@ services:
   web:
     build: .
     ports: 
-      - "${YTDLOR_WEB_PORT:-3000}:3000"
+      - "127.0.0.1:${YTDLOR_WEB_PORT:-3000}:3000"
     volumes:
       - type: volume
         source: db
