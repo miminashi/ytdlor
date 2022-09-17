@@ -14,4 +14,5 @@ services:
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
       REDIS_URL: "redis://redis:6379/1"
       YTDLOR_AUTOREMOVE_INTERVAL: 15
+      YTDLOR_AUTOREMOVE_FAILED_INTERVAL: 120
     command: ./autoremoved.sh
