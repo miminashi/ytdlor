@@ -31,7 +31,7 @@ jobs:
     - name: Deploy to host
       env:
         COMPOSE_PROJECT_NAME: ytdlor_demo_site
-        RAILS_MASTER_KEY: ${{ secrets.DEMO_SITE_RAILS_MASTER_KEY }}
+        SECRET_KEY_BASE: ${{ secrets.DEMO_SITE_SECRET_KEY_BASE }}
         YTDLOR_WEB_PORT: 8001
       run: |
         docker compose -f docker-compose.yml -f docker-compose-demo-site.yml build
