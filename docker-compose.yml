@@ -66,6 +66,15 @@ services:
     command: rake resque:work
   redis:
     image: redis
+  db:
+    image: postgres
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
 volumes:
   db:
+  postgres:
   storage:

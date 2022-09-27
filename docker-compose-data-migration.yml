@@ -1,0 +1,9 @@
+services:
+  data_migration:
+    build: ./data_migration
+    volumes:
+      - type: volume
+        source: db
+        target: /var/opt/ytdlor/db
+    depends_on:
+      - db
