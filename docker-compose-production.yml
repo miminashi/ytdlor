@@ -1,0 +1,36 @@
+x-rails-environment:
+  &rails_environment
+  RAILS_ENV: production
+
+x-rails_volumes:
+  &rails_volumes
+  - type: volume
+    source: storage
+    target: /opt/app/storage
+
+services:
+  web:
+    build:
+      target: production
+    volumes:
+      *rails_volumes
+    environment:
+      << : *rails_environment
+      RAILS_SERVE_STATIC_FILES: 1
+  default_worker:
+    volumes:
+      *rails_volumes
+    environment:
+      *rails_environment
+  thumbnail_worker:
+    volumes:
+      *rails_volumes
+    environment:
+      *rails_environment
+  video_worker:
+    volumes:
+      *rails_volumes
+    environment:
+      *rails_environment
+volumes:
+  storage:
