@@ -4,12 +4,16 @@ x-resque-environment:
   REDIS_URL: "redis://redis:6379/1"
   VERBOSE: 1
 
+x-rails-build:
+  &rails_build
+  context: .
+  args:
+    REDIS_URL: "redis://redis:6379/1"
+
 services:
   web:
     build:
-      context: .
-      args:
-        REDIS_URL: "redis://redis:6379/1"
+      *rails_build
     image: ${COMPOSE_PROJECT_NAME}:latest
     ports: 
       - "127.0.0.1:${YTDLOR_WEB_PORT:-3000}:3000"
@@ -21,6 +25,8 @@ services:
       REDIS_URL: "redis://redis:6379/1"
     command: rails server -b 0.0.0.0
   default_worker:
+    build:
+      *rails_build
     image: ${COMPOSE_PROJECT_NAME}:latest
     depends_on:
       - db
@@ -30,6 +36,8 @@ services:
       QUEUE: default
     command: rake resque:work
   thumbnail_worker:
+    build:
+      *rails_build
     image: ${COMPOSE_PROJECT_NAME}:latest
     depends_on:
       - db
@@ -39,6 +47,8 @@ services:
       QUEUE: thumbnail
     command: rake resque:work
   video_worker:
+    build:
+      *rails_build
     image: ${COMPOSE_PROJECT_NAME}:latest
     depends_on:
       - db
