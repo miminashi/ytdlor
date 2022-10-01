@@ -17,6 +17,9 @@ services:
     image: ${COMPOSE_PROJECT_NAME}:latest
     volumes:
       *rails_volumes
+    depends_on:
+      - db
+      - redis
     init: true
     environment:
       RAILS_ENV: production
