@@ -1,13 +1,25 @@
+x-rails-build:
+  &rails_build
+  context: .
+  args:
+    REDIS_URL: "redis://redis:6379/1"
+
+x-rails_volumes:
+  &rails_volumes
+  - type: volume
+    source: storage
+    target: /opt/app/storage
+
 services:
   auto_remove:
-    build: .
+    build:
+      *rails_build
+    image: ${COMPOSE_PROJECT_NAME}:latest
     volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
-      - type: volume
-        source: storage
-        target: /var/opt/ytdlor/storage
+      *rails_volumes
+    depends_on:
+      - db
+      - redis
     init: true
     environment:
       RAILS_ENV: production

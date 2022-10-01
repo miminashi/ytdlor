@@ -68,8 +68,8 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  # Resqueで動作確認したいときはコメントをはずす
-  #config.active_job.queue_adapter = :resque
+  # Use Resque as ActiveJob Adapter
+  config.active_job.queue_adapter = :resque
 
   # ActiveStorageのURLの期限切れを伸ばす
   #   - 動画の再生が5分で途切れる問題のワークアラウンド

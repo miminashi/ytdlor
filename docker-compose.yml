@@ -1,71 +1,71 @@
+x-resque-environment:
+  &resque_environment
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  REDIS_URL: "redis://redis:6379/1"
+  VERBOSE: 1
+
+x-rails-build:
+  &rails_build
+  context: .
+  args:
+    REDIS_URL: "redis://redis:6379/1"
+
 services:
   web:
-    build: .
+    build:
+      *rails_build
+    image: ${COMPOSE_PROJECT_NAME}:latest
     ports: 
       - "127.0.0.1:${YTDLOR_WEB_PORT:-3000}:3000"
-    volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
-      - type: volume
-        source: storage
-        target: /var/opt/ytdlor/storage
+    depends_on:
+      - db
+      - redis
     environment:
-      RAILS_ENV: production
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       REDIS_URL: "redis://redis:6379/1"
-      RAILS_SERVE_STATIC_FILES: 1
-    command: rails server
+    command: rails server -b 0.0.0.0
   default_worker:
-    build: .
-    volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
-      - type: volume
-        source: storage
-        target: /var/opt/ytdlor/storage
+    build:
+      *rails_build
+    image: ${COMPOSE_PROJECT_NAME}:latest
+    depends_on:
+      - db
+      - redis
     environment:
-      RAILS_ENV: production
-      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-      REDIS_URL: "redis://redis:6379/1"
-      VERBOSE: 1
+      << : *resque_environment
       QUEUE: default
     command: rake resque:work
   thumbnail_worker:
-    build: .
-    volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
-      - type: volume
-        source: storage
-        target: /var/opt/ytdlor/storage
+    build:
+      *rails_build
+    image: ${COMPOSE_PROJECT_NAME}:latest
+    depends_on:
+      - db
+      - redis
     environment:
-      RAILS_ENV: production
-      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-      REDIS_URL: "redis://redis:6379/1"
-      VERBOSE: 1
+      << : *resque_environment
       QUEUE: thumbnail
     command: rake resque:work
   video_worker:
-    build: .
-    volumes:
-      - type: volume
-        source: db
-        target: /var/opt/ytdlor/db
-      - type: volume
-        source: storage
-        target: /var/opt/ytdlor/storage
+    build:
+      *rails_build
+    image: ${COMPOSE_PROJECT_NAME}:latest
+    depends_on:
+      - db
+      - redis
     environment:
-      RAILS_ENV: production
-      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
-      REDIS_URL: "redis://redis:6379/1"
-      VERBOSE: 1
+      << : *resque_environment
       QUEUE: video
     command: rake resque:work
   redis:
     image: redis
-volumes:
   db:
-  storage:
+    image: postgres
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+volumes:
+  postgres:
