@@ -5,7 +5,9 @@
   
   <article class="article">
     <% if @archive.video.attached? %>
-      <%= video_tag(url_for(@archive.video), controls: true) %>
+      <template data-controller="autoimport">
+        <%= video_tag(url_for(@archive.video), controls: true) %>
+      </template>
     <% else %>
       <p>no video</p>
     <% end %>
