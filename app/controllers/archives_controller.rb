@@ -3,7 +3,7 @@ class ArchivesController < ApplicationController
 
   # GET /archives or /archives.json
   def index
-    @archives = Archive.ordered
+    @archives = Archive.ordered.with_attached_thumbnail.with_attached_video
   end
 
   # GET /archives/1 or /archives/1.json
