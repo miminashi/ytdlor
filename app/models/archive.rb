@@ -122,7 +122,7 @@ class Archive < ApplicationRecord
     self.update({:status => Status::PROCESSING})
     Dir.mktmpdir do |dir|
       filename = File.join(dir, 'download.mp4')
-      command = 'youtube-dl --newline --merge-output-format mp4 -o "%s" "%s"' % [filename, self.original_url]
+      command = 'youtube-dl --newline --recode-video mp4 -o "%s" "%s"' % [filename, self.original_url]
       success = nil
       Open3.popen2e(command) do |stdin, stdoe, wait_thr|
         while (line = stdoe.gets) do
