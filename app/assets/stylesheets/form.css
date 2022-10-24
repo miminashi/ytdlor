@@ -1,14 +1,18 @@
 .form {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-xs);
-  padding: var(--space-m) var(--space-m);
+  padding: var(--space-xs);
 }
 
 .form__group {
   display: flex;
   flex: 1;
+  padding: var(--space-xxs);
+}
+
+.form__group--action {
+  display: flex;
+  justify-content: end;
+  gap: var(--space-xs);
+  padding: var(--space-xxs);
 }
 
 .form__label {
