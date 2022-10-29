@@ -27,3 +27,11 @@
   display: flex;
   gap: var(--space-s);
 }
+
+.article__log {
+  padding: var(--space-xs);
+}
+
+.article__log pre {
+  white-space: pre-wrap;
+}
