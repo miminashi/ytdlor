@@ -21,6 +21,8 @@
 
 .article__title {
   margin-bottom: var(--space-xs);
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .article__metadata {
