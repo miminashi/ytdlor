@@ -19,6 +19,14 @@
         <div>状態: <%= @archive.status %></div>
       </div>
     </div>
+    <div class="article__log">
+      <h3>ログ</h3>
+      <% if @archive.video_download_log.attached? %>
+        <pre><%= @archive.video_download_log_text %></pre>
+      <% else %>
+        <p>まだログはありません</p>
+      <% end %>
+    </div>
   </article>
 </main>
 

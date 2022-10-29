@@ -24,6 +24,7 @@ class Archive < ApplicationRecord
 
   has_one_attached :thumbnail
   has_one_attached :video
+  has_one_attached :video_download_log
 
   attribute(:status, default: Status::WAITING)
 
@@ -76,6 +77,12 @@ class Archive < ApplicationRecord
     status == Status::DONE
   end
 
+  def video_download_log_text
+    video_download_log.blob.open do |f|
+      f.read
+    end
+  end
+
   #
   # 動画のタイトルを取得してtitleに設定する
   #
@@ -122,9 +129,11 @@ class Archive < ApplicationRecord
     self.update({:status => Status::PROCESSING})
     Dir.mktmpdir do |dir|
       filename = File.join(dir, 'download.mp4')
+      log_filename = File.join(dir, 'download.log')
       command = 'youtube-dl --newline --recode-video mp4 -o "%s" "%s"' % [filename, self.original_url]
       success = nil
       Open3.popen2e(command) do |stdin, stdoe, wait_thr|
+        log = File.open(log_filename, 'w')
         while (line = stdoe.gets) do
           # youtube-dl の [download] ではじまる行は間引きする
           if line =~ /[download]/
@@ -132,18 +141,21 @@ class Archive < ApplicationRecord
           else
             logger.info(line.chomp)
           end
+          log.write(line)
         end
+        log.close
         success = wait_thr.value.success?
       end
+      self.reload
       if success
-        self.reload
         self.video.attach(io: File.open(filename), filename: filename, content_type: 'video/mp4')
         logger.info("ビデオのダウンロードに成功しました")
-        broadcast_replace_to(TURBO_CHANNEL)
       else
+        self.update({:status => Status::FAILED})
         logger.info("ビデオのダウンロードに失敗しました")
-        return false
       end
+      self.video_download_log.attach(io: File.open(log_filename), filename: 'download.log', content_type: 'text/plain')
+      broadcast_replace_to(TURBO_CHANNEL)
     end
   end
 
