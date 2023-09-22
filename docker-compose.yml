@@ -60,7 +60,7 @@ services:
   redis:
     image: redis
   db:
-    image: postgres
+    image: postgres:14
     volumes:
       - type: volume
         source: postgres
