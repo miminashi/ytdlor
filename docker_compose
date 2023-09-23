@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# SECRET_KEY_BASE が定義されていない場合
+if [ -z "${SECRET_KEY_BASE}" ]; then
+  echo "SECRET_KEY_BASE is not defined" >&2
+  if [ -f secret.txt ]; then
+    echo "using secret.txt" >&2
+    SECRET_KEY_BASE="$(cat secret.txt)"
+  elif [ -f default_secret.txt ]; then
+    echo "using default_secret.txt" >&2
+    echo "+------------- !!!! WARNING !!!! --------------+" >&2
+    echo "| DO NOT USE default_secret.txt FOR DEPLOYMENT |" >&2
+    echo "+----------------------------------------------+" >&2
+    SECRET_KEY_BASE="$(cat default_secret.txt)"
+  else
+    echo "no secret files found" >&2
+    exit 1
+  fi
+fi
+
+export SECRET_KEY_BASE
+docker compose -f docker-compose.yml -f docker-compose-development.yml -p ytdlor "$@"
