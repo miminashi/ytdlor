@@ -1,5 +1,7 @@
 x-rails-environment:
   &rails_environment
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  REDIS_URL: "redis://redis:6379/1"
   RAILS_ENV: production
 
 x-rails_volumes:
@@ -8,26 +10,39 @@ x-rails_volumes:
     source: storage
     target: /opt/app/storage
 
+x-rails-build:
+  &rails_build
+  context: .
+  dockerfile: Dockerfile.production
+  args:
+    REDIS_URL: "redis://redis:6379/1"
+
 services:
   web:
     build:
-      target: production
+      *rails_build
     volumes:
       *rails_volumes
     environment:
       << : *rails_environment
       RAILS_SERVE_STATIC_FILES: 1
   default_worker:
+    build:
+      *rails_build
     volumes:
       *rails_volumes
     environment:
       *rails_environment
   thumbnail_worker:
+    build:
+      *rails_build
     volumes:
       *rails_volumes
     environment:
       *rails_environment
   video_worker:
+    build:
+      *rails_build
     volumes:
       *rails_volumes
     environment:
