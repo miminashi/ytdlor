@@ -168,7 +168,7 @@ class Archive < ApplicationRecord
     stdout, stderr, status = Open3.capture3(command)
     if status.success?
       logger.info("タイトルの取得に成功しました")
-      return stdout
+      return stdout.chomp
     else
       logger.debug stderr
       logger.debug("タイトルの取得に失敗しました")
