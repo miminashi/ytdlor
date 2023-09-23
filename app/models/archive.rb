@@ -130,7 +130,7 @@ class Archive < ApplicationRecord
     Dir.mktmpdir do |dir|
       filename = File.join(dir, 'download.mp4')
       log_filename = File.join(dir, 'download.log')
-      command = 'youtube-dl --newline --recode-video mp4 -o "%s" "%s"' % [filename, self.original_url]
+      command = 'yt-dlp --newline --recode-video mp4 -o "%s" "%s"' % [filename, self.original_url]
       success = nil
       Open3.popen2e(command) do |stdin, stdoe, wait_thr|
         log = File.open(log_filename, 'w')
@@ -164,7 +164,7 @@ class Archive < ApplicationRecord
 
   # タイトルを取得する
   def fetch_title(video_url)
-    command = 'youtube-dl -e "%s"' % video_url
+    command = 'yt-dlp -e "%s"' % video_url
     stdout, stderr, status = Open3.capture3(command)
     if status.success?
       logger.info("タイトルの取得に成功しました")
@@ -178,7 +178,7 @@ class Archive < ApplicationRecord
 
   # サムネイルのURLを取得する
   def fetch_thumbnail_url(video_url)
-    command = 'youtube-dl --get-thumbnail "%s"' % original_url
+    command = 'yt-dlp --get-thumbnail "%s"' % original_url
     stdout, stderr, status = Open3.capture3(command)
     if status.success?
       logger.info("サムネイルURLの取得に成功しました")

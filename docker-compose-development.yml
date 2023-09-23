@@ -6,8 +6,6 @@ x-rails_volumes:
 
 services:
   web:
-    build:
-      target: development
     volumes:
       *rails_volumes
   default_worker:
