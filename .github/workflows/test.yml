@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: PreCompile assets
+        run: ./rails assets:precompile RAILS_ENV=test
+      - name: Create database
+        run: ./rails db:create
+      - name: Run tests on docker compose
+        run: ./rails test
