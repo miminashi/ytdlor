@@ -130,7 +130,7 @@ class Archive < ApplicationRecord
     Dir.mktmpdir do |dir|
       filename = File.join(dir, 'download.mp4')
       log_filename = File.join(dir, 'download.log')
-      command = 'yt-dlp --newline --recode-video mp4 -o "%s" "%s"' % [filename, self.original_url]
+      command = 'yt-dlp --newline -f "bestvideo[ext=mp4]+bestaudio[ext=aac]/best[ext=mp4]" -o "%s" "%s"' % [filename, self.original_url]
       success = nil
       Open3.popen2e(command) do |stdin, stdoe, wait_thr|
         log = File.open(log_filename, 'w')
