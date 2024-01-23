@@ -24,7 +24,7 @@ services:
       - redis
     environment:
       *rails_environment
-    command: rails server -b 0.0.0.0
+    command: ./server.sh
   default_worker:
     build:
       *rails_build
