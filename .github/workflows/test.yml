@@ -19,3 +19,8 @@ jobs:
         run: ./docker_compose --profile test run --rm --build test rails db:create
       - name: Run tests on docker compose
         run: ./docker_compose --profile test run --rm --build test rails test:system
+      - name: Upload Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: log
+          path: log/test.log
