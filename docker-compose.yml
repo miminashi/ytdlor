@@ -27,7 +27,7 @@ services:
     environment:
       *rails_environment
     command: ./server.sh
-  default_worker:
+  worker:
     build:
       *rails_build
     image: ${COMPOSE_PROJECT_NAME}:latest
@@ -35,31 +35,8 @@ services:
       - db
       - redis
     environment:
-      << : *resque_environment
-      QUEUE: default
-    command: rake resque:work
-  thumbnail_worker:
-    build:
-      *rails_build
-    image: ${COMPOSE_PROJECT_NAME}:latest
-    depends_on:
-      - db
-      - redis
-    environment:
-      << : *resque_environment
-      QUEUE: thumbnail
-    command: rake resque:work
-  video_worker:
-    build:
-      *rails_build
-    image: ${COMPOSE_PROJECT_NAME}:latest
-    depends_on:
-      - db
-      - redis
-    environment:
-      << : *resque_environment
-      QUEUE: video
-    command: rake resque:work
+      *rails_environment
+    command: rake solid_queue:start
   redis:
     image: redis
   db:
@@ -70,5 +47,6 @@ services:
         target: /var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
+
 volumes:
   postgres:

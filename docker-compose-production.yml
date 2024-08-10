@@ -26,26 +26,13 @@ services:
     environment:
       << : *rails_environment
       RAILS_SERVE_STATIC_FILES: 1
-  default_worker:
+  worker:
     build:
       *rails_build
     volumes:
       *rails_volumes
     environment:
       *rails_environment
-  thumbnail_worker:
-    build:
-      *rails_build
-    volumes:
-      *rails_volumes
-    environment:
-      *rails_environment
-  video_worker:
-    build:
-      *rails_build
-    volumes:
-      *rails_volumes
-    environment:
-      *rails_environment
+
 volumes:
   storage:

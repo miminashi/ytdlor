@@ -75,7 +75,7 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   # Use Resque as ActiveJob Adapter
-  config.active_job.queue_adapter = :resque
+  # config.active_job.queue_adapter = :resque
 
   # ActiveStorageのURLの期限切れを伸ばす
   #   - 動画の再生が5分で途切れる問題のワークアラウンド
