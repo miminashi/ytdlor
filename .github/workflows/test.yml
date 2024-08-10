@@ -20,6 +20,7 @@ jobs:
       - name: Run tests on docker compose
         run: ./docker_compose --profile test run --rm --build test rails test:system
       - name: Upload Logs
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: log
