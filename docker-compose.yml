@@ -11,6 +11,7 @@ x-resque-environment:
 x-rails-build:
   &rails_build
   context: .
+  target: development
 
 services:
   web:
@@ -18,7 +19,8 @@ services:
       *rails_build
     image: ${COMPOSE_PROJECT_NAME}:latest
     ports: 
-      - "127.0.0.1:${YTDLOR_WEB_PORT:-3000}:3000"
+      #- "127.0.0.1:${YTDLOR_WEB_PORT:-3000}:3000"
+      - "0.0.0.0:${YTDLOR_WEB_PORT:-3000}:3000"
     depends_on:
       - db
       - redis

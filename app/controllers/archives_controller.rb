@@ -1,5 +1,6 @@
 class ArchivesController < ApplicationController
-  before_action :set_archive, only: %i[ show edit update destroy ]
+  #before_action :set_archive, only: %i[ show edit update destroy ]
+  before_action :set_archive, only: %i[ show edit ]
 
   # GET /archives or /archives.json
   def index

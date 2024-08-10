@@ -17,3 +17,18 @@ services:
   video_worker:
     volumes:
       *rails_volumes
+  test:
+    volumes:
+      *rails_volumes
+    build:
+      context: .
+      target: test
+    image: ${COMPOSE_PROJECT_NAME}:latest
+    depends_on:
+      - db
+      - redis
+    environment:
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      REDIS_URL: "redis://redis:6379/1"
+    command: rails test
+    profiles: [test]
