@@ -18,4 +18,4 @@ jobs:
       - name: Create database
         run: ./docker_compose --profile test run --rm --build test rails db:create
       - name: Run tests on docker compose
-        run: ./docker_compose --profile test run --rm --build test rails test
+        run: ./docker_compose --profile test run --rm --build test rails test:system
