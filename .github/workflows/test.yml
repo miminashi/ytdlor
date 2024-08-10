@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: PreCompile assets
-        run: ./rails assets:precompile RAILS_ENV=test
+        run: ./docker_compose --profile test run --rm --build test rails assets:precompile
       - name: Create database
-        run: ./rails db:create
+        run: ./docker_compose --profile test run --rm --build test rails db:create
       - name: Run tests on docker compose
-        run: ./rails test
+        run: ./docker_compose --profile test run --rm --build test rails test
