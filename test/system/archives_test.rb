@@ -3,8 +3,10 @@ require "application_system_test_case"
 class ArchivesTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
-  BIG_BUCK_BUNNY_URL = "https://vimeo.com/1084537"
-  ELEPHANTS_DREAM_URL = "https://vimeo.com/1132937"
+  #BIG_BUCK_BUNNY_URL = "https://vimeo.com/1084537"
+  BIG_BUCK_BUNNY_URL = "https://www.youtube.com/watch?v=YE7VzlLtp-4"
+  #ELEPHANTS_DREAM_URL = "https://vimeo.com/1132937"
+  ELEPHANTS_DREAM_URL = "https://www.youtube.com/watch?v=TLkA0RELQ1g"
 
   setup do
     perform_enqueued_jobs do
