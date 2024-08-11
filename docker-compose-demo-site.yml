@@ -1,6 +1,7 @@
 x-rails-build:
   &rails_build
   context: .
+  target: production
   args:
     REDIS_URL: "redis://redis:6379/1"
 

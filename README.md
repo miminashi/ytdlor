@@ -60,56 +60,50 @@ https://demo.ytdlor.or6.jp/
 
 ## デバッグ
 
-**必要なソフトウェアのインストール**
+**起動**
 
 ```sh
-brew install youtube-dl
-brew install redis
+./docker_compose up --build
 ```
 
-**gemsのインストール**
+ブラウザから http://localhost:3000/ にアクセスする
 
-```sh
-cd ytdlor
-bundle
-```
-
-**Redisの起動**
-
-```sh
-brew services start redis
-```
-
-**ワーカーの起動**
-
-```sh
-./workers.sh
-```
-
-**Railsプロセスの起動**
-
-```sh
-rails s
-```
-
-起動したら http://localhost:3000/ でアクセスできる
 
 **テストの実行**
 
+- すべてのテストを実行する
+
 ```sh
-rails test:system
+./docker_compose --profile test run --rm --build test rails test
 ```
 
-テストのログを見るには、
+- test:system のみ実行する
+
+```sh
+./docker_compose --profile test run --rm --build test rails test:system
+```
+
+- テストのログを見る
 
 ```sh
 tail -f log/test.log
 ```
 
-**docker composeの動作確認**
+
+**gemのアップデート**
+
+- すべての gem のバージョンをアップデートする
 
 ```sh
-RAILS_MASTER_KEY="$(cat config/credentials/production.key)" docker compose up
+./docker_compose run --rm web bundle update
+./docker_compose build
+```
+
+- capybara gem のバージョンをアップデートする
+
+```sh
+./docker_compose run --rm web bundle update capybara
+./docker_compose build
 ```
 
 **solargraphのセットアップ**

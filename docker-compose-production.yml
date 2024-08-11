@@ -13,7 +13,7 @@ x-rails_volumes:
 x-rails-build:
   &rails_build
   context: .
-  dockerfile: Dockerfile.production
+  target: production
   args:
     REDIS_URL: "redis://redis:6379/1"
 
@@ -26,26 +26,13 @@ services:
     environment:
       << : *rails_environment
       RAILS_SERVE_STATIC_FILES: 1
-  default_worker:
+  worker:
     build:
       *rails_build
     volumes:
       *rails_volumes
     environment:
       *rails_environment
-  thumbnail_worker:
-    build:
-      *rails_build
-    volumes:
-      *rails_volumes
-    environment:
-      *rails_environment
-  video_worker:
-    build:
-      *rails_build
-    volumes:
-      *rails_volumes
-    environment:
-      *rails_environment
+
 volumes:
   storage:
