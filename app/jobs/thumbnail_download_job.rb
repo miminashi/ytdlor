@@ -5,7 +5,8 @@ class ThumbnailDownloadJob < ApplicationJob
   # ジョブを実行する
   #
   # @param archive [Archive]
-  def perform(archive)
+  def perform(archive_id)
+    archive = Archive.find(archive_id)
     archive.update_title()
     archive.update_thumbnail()
   end

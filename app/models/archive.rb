@@ -62,11 +62,11 @@ class Archive < ApplicationRecord
 
 
   def update_thumbnail_later
-    ThumbnailDownloadJob.perform_later(self)
+    ThumbnailDownloadJob.perform_later(self.id)
   end
 
   def update_video_later
-    VideosDownloadJob.perform_later(self)
+    VideosDownloadJob.perform_later(self.id)
   end
 
   def waiting?
