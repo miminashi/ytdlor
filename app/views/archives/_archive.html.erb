@@ -2,7 +2,7 @@
   <article class="article">
     <%= link_to(archive_path(archive), data: {turbo_frame: "_top"}, class: "article__anchor") do %>
       <% if archive.thumbnail.attached? %>
-        <%= image_tag(rails_representation_path(archive.thumbnail.representation(resize_to_limit: [640, 360])), class: "article__thumbnail") %>
+        <%= image_tag(rails_representation_path(archive.thumbnail.variant(:thumbnail)), class: "article__thumbnail") %>
       <% else %>
         <%= image_tag("no_image.png", :class => "article__thumbnail") %>
       <% end %>

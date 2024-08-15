@@ -30,3 +30,8 @@
 
 /config/master.key
 /config/credentials/production.key
+
+/backup
+/deploy_scripts
+backup.sh
+restore.sh

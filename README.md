@@ -95,8 +95,7 @@ tail -f log/test.log
 - すべての gem のバージョンをアップデートする
 
 ```sh
-./docker_compose run --rm web bundle update
-./docker_compose build
+./docker_compose run --rm web bundle update && ./docker_compose build
 ```
 
 - capybara gem のバージョンをアップデートする

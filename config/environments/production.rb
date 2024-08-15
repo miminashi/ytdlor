@@ -95,4 +95,8 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # ActiveStorageのURLの期限切れを伸ばす
+  #   - 動画の再生が5分で途切れる問題のワークアラウンド
+  config.active_storage.service_urls_expire_in = 24.hour
 end
