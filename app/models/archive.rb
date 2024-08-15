@@ -22,7 +22,9 @@ class Archive < ApplicationRecord
     FAILED = "failed"
   end
 
-  has_one_attached :thumbnail
+  has_one_attached :thumbnail do |attachable|
+    attachable.variant(:thumbnail, resize_to_limit: [640, 360])
+  end
   has_one_attached :video
   has_one_attached :video_download_log
 
