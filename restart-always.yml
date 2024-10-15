@@ -1,0 +1,9 @@
+services:
+  web:
+    restart: always
+  worker:
+    restart: always
+  redis:
+    restart: always
+  db:
+    restart: always
