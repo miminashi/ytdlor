@@ -3,11 +3,6 @@ x-rails-environment:
   SECRET_KEY_BASE: ${SECRET_KEY_BASE}
   REDIS_URL: "redis://redis:6379/1"
 
-x-resque-environment:
-  &resque_environment
-  << : *rails_environment
-  VERBOSE: 1
-
 x-rails-build:
   &rails_build
   context: .
