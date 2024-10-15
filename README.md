@@ -126,7 +126,7 @@ solargraph-rails-init
 
 ```ssh_config
 Host ytdlor.local
-  HostName ytdlor2.local
+  HostName ytdlor.local
   User debian
 ```
 
