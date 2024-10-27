@@ -18,9 +18,11 @@
         <div>追加日: <%= @archive.created_at.in_time_zone('Tokyo').strftime('%Y-%m-%d %H:%M') %></div>
         <div>状態: <%= @archive.status %></div>
       </div>
+      <% if @archive.video.attached? %>
       <div>
-        <%= link_to("ダウンロード", @archive.video, download: @archive.title ) %>
+        <%= link_to("ダウンロード", @archive.video, download: sanitize_filename(@archive.title)) %>
       </div>
+      <% end %>
     </div>
     <div class="article__log">
       <h3>ログ</h3>
