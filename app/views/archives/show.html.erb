@@ -20,7 +20,7 @@
       </div>
       <% if @archive.video.attached? %>
       <div>
-        <%= link_to("ダウンロード", @archive.video, download: sanitize_filename(@archive.title)) %>
+        <%= link_to("ダウンロード", @archive.video, download: @archive.title) %>
       </div>
       <% end %>
     </div>
