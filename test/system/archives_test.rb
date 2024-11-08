@@ -6,7 +6,7 @@ class ArchivesTest < ApplicationSystemTestCase
   BIG_BUCK_BUNNY_URL = "https://www.youtube.com/watch?v=YE7VzlLtp-4"
   ELEPHANTS_DREAM_URL = "https://www.youtube.com/watch?v=TLkA0RELQ1g"
   VIDEO_1 = "https://x.com/miminashi/status/1330543926416171010"
-  VIDEO_2 = "https://x.com/miminashi/status/1304544532256690178"
+  VIDEO_2 = "https://drive.google.com/file/d/1IbayJypLM7nmqUQlqIMlCTeJG3nGW58P/view"
 
   setup do
     perform_enqueued_jobs do
@@ -36,6 +36,6 @@ class ArchivesTest < ApplicationSystemTestCase
     perform_enqueued_jobs
 
     assert_selector "h1", text: "保存したビデオ"
-    assert_text "Миминаши - スロットマシンみたいなのできた #USBシリーズ"
+    assert_text "test_10s.mov"
   end
 end
