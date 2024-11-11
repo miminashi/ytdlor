@@ -11,7 +11,7 @@ RUN apt-get -y update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -L -O https://github.com/yt-dlp/yt-dlp/releases/download/2024.08.06/yt-dlp_linux && \
+RUN curl -L -O https://github.com/yt-dlp/yt-dlp/releases/download/2024.11.04/yt-dlp_linux && \
     mv yt-dlp_linux yt-dlp && \
     chmod +x yt-dlp && \
     mv yt-dlp /usr/local/bin/yt-dlp
