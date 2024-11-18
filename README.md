@@ -112,3 +112,71 @@ yard
 gem install solargraph-rails-init
 solargraph-rails-init
 ```
+
+
+## デプロイ
+
+- 例として, LAN内に設置されたDebianサーバ ytdlor.local にデプロイする
+
+**サーバの準備**
+
+- Docker Engine をインストールする
+  - https://docs.docker.com/engine/install/debian/
+- `ssh ytdlor.local` という形式でsshできるように, デプロイに使用する作業用マシンの ssh_config に設定を追加しておく
+
+```ssh_config
+Host ytdlor.local
+  HostName ytdlor.local
+  User debian
+```
+
+- `ssh ytdlor.local` でsshログインできることを確認しておく
+- お好みでnginxを立ち上げる
+  - `nginx.conf` を参考にしてください
+
+**デプロイスクリプトの用意**
+
+- デプロイ用のsecretを生成する
+
+```sh
+./docker_compose run --rm web rails secret
+```
+
+- 以下の内容で `deploy_scripts/deploy_ytdlor_local.sh` を作成する
+  - 生成したsecretを `SECRET_KEY_BASE=` に設定する
+
+```sh
+#!/bin/sh
+
+set -eu
+
+docker_compose() {
+  export DOCKER_HOST="ssh://ytdlor.local"
+  export COMPOSE_PROJECT_NAME="ytdlor"
+  export SECRET_KEY_BASE="<ここに生成したsecretを設定する>"
+  export YTDLOR_WEB_PORT="8001"
+  docker compose -f docker-compose.yml -f docker-compose-production.yml -f restart-always.yml "${@}"
+}
+
+args="${@:-""}"
+if [ -n "${args}" ]; then
+  docker_compose "${@}"
+else
+  docker_compose build
+  docker_compose down
+  docker_compose run --rm web rails db:migrate
+  docker_compose up -d --remove-orphans
+fi
+```
+
+- 実行権限を付与する
+
+```sh
+chmod +x deploy_scripts/deploy_ytdlor_local.sh
+```
+
+**デプロイの実行**
+
+```sh
+./deploy_scripts/deploy_ytdlor_local.sh
+```
